@@ -97,7 +97,7 @@ class Pokemon(BaseModel):
     
     @classmethod
     def get_all(cls):
-        return cls.db.scan_iter('pogom-pokemons:*')
+        return cls.get_active(cls)
     
     @classmethod
     def set(cls, key, value):
@@ -116,7 +116,13 @@ class Pokemon(BaseModel):
 class Pokestop(BaseModel):    
     @classmethod
     def get_all(cls):
-        return cls.db.scan_iter('pogom-pokestops:*')
+        keys = cls.db.keys('pogom-pokestops:*')
+        pokestops = []
+        
+        for key in keys:
+            pokestops.append(json.loads(cls.db.get(key)))
+        
+        return pokestops
 
     @classmethod
     def set(cls, key, value):
@@ -131,7 +137,14 @@ class Gym(BaseModel):
     
     @classmethod
     def get_all(cls):
-        return cls.db.scan_iter('pogom-gyms:*')
+        keys = cls.db.keys('pogom-gyms:*')
+        
+        gyms = []
+        
+        for key in keys:
+            gyms.append(json.loads(cls.db.get(key)))
+        
+        return gyms
     
     @classmethod
     def set(cls, key, value):
